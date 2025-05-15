@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Direktori yang berisi video live wallpaper
+VID_DIR="/home/inuma/Videos/"
+
+# Simpan direktori saat ini
+CWD="$(pwd)"
+
+cd "$VID_DIR" || exit
+
+# Handle spasi pada nama file
+IFS=$'\n'
+
+# Pilih file video dengan rofi
+SELECTED_VIDEO=$(for a in *.mp4 *.webm *.mkv; do echo -en "$a\0icon\x1f$a\n" ; done | rofi -dmenu -p "Live Wallpaper")
+
+# Jika pengguna memilih file, jalankan backend
+if [ -n "$SELECTED_VIDEO" ]; then
+    walset-mpv-backend "$SELECTED_VIDEO"
+fi
+
+cd "$CWD" || exit

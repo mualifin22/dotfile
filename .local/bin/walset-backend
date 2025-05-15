@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Pastikan satu argumen (nama file wallpaper) diberikan
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <path_to_image>"
+    exit 1
+fi
+
+IMAGE="$1"
+
+notify-send "Changing Theme.."
+
+
+swww img "$IMAGE" --transition-type="center" --scale fill  --transition-fps="60"
+
+
+wal -i "$IMAGE" -n -s -t -e 
+
+python3 /home/inuma/.config/nvim/pywal/chadwal.py
+
+pywal-spicetify Dribbblish
+
+matugen image "$IMAGE"
+
+pkill waybar
+waybar > /dev/null 2>&1 &
+
+pkill swaync
+swaync > /dev/null 2>&1 &
+
+notify-send "Theme Applied!""

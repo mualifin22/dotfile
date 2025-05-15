@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Pastikan satu argumen diberikan
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <video_filename>"
+    exit 1
+fi
+
+VIDEO="$1"
+# Simpan nama video untuk autostart
+echo "$VIDEO" > "$HOME/.config/mpvpaper/current-video.txt"
+
+MONITOR=$(hyprctl monitors | awk '/Monitor/ {print $2; exit}')
+
+notify-send "Applying Live Wallpaper..."
+
+# Bunuh proses mpvpaper sebelumnya jika ada
+pkill -x mpvpaper
+
+# Jalankan mpvpaper dalam mode loop & mute
+mpvpaper -o "loop" "$MONITOR" "$HOME/Videos/$VIDEO" -- --volume=0 &
+
+# Kamu bisa menambahkan efek pewarnaan di sini jika ingin
+# wal -i "$HOME/Videos/$VIDEO" -n -s -t -e
+# matugen video "$HOME/Videos/$VIDEO"
+
+notify-send "Live Wallpaper Applied!"

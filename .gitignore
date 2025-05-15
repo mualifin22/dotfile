@@ -1,0 +1,27 @@
+# Ignore everything by default
+*
+
+# Explicitly include only dotfiles and select dirs
+!.zshrc
+!.gitignore
+!.config/
+!.local/
+!.cache/
+
+# Inside .cache, exclude everything by default
+.cache/*
+# ...kecuali misalnya kamu ingin simpan warna wal
+!.cache/wal/
+# bisa tambah sesuai kebutuhan:
+# !.cache/rofi/
+# !.cache/pfetch/
+
+# Exclude some noisy dirs inside .local
+.local/share/flatpak/
+.local/share/Trash/
+.local/share/RecentFiles/
+
+# Optional: exclude nvim backup/swap
+.config/nvim/swap/
+.config/nvim/backup/
+.config/nvim/undo/

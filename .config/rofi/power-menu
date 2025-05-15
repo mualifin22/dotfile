@@ -1,0 +1,35 @@
+#!/bin/sh
+# =============================================================
+# Author: gh0stzk
+# Repo: https://github.com/gh0stzk/dotfiles
+# Date: 2024-02-22
+#
+# Script Name: PowerMenu
+# Description: Minimalist system power control menu for bspwm
+#
+# Copyright (C) 2021-2025 gh0stzk <z0mbi3.zk@protonmail.com>
+# Licensed under GPL-3.0 license
+# =============================================================
+
+options="󰍁
+
+󰗽
+󰜉
+󰐥"
+
+rofi_cmd() {
+	rofi -dmenu \
+		-p "Goodbye ${USER}" \
+		-mesg "Uptime: $(uptime -p | sed -e 's/up //g')" \
+		-theme "/home/inuma/.local/share/rofi/themes/material-you/material-you-powermenu.rasi"
+}
+
+chosen=$(printf "%s\n" "$options" | rofi_cmd)
+
+case $chosen in
+    "󰐥") shutdown now ;;
+    "󰜉") reboot ;;
+    "󰍁") hyprlock ;;
+    "") systemctl suspend ;;
+    "󰗽") hyprctl dispatch exit ;;
+esac

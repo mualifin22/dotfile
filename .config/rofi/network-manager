@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Dependencies: rofi, nmcli
+
+rofi_cmd="rofi -dmenu -p 'Network' -theme /home/inuma/.local/share/rofi/themes/material-you/material-you-network.rasi"
+nmcli_cmd="nmcli -t -f ACTIVE,SSID dev wifi"
+
+get_wifi_list() {
+  nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '{if($1=="yes") print "  " $2 " (Connected)"; else print "直  " $2}' | sort
+}
+
+get_ethernet_device() {
+  nmcli device status | awk '$2 == "ethernet" {print $1; exit}'
+}
+
+main_menu() {
+  echo -e "🔄  Rescan\n📶  Toggle Wi-Fi\n📡  Connect to Network\n🔌  Ethernet LAN\n❌  Disconnect"
+}
+
+case "$(main_menu | $rofi_cmd)" in
+  "🔄  Rescan")
+    nmcli device wifi rescan
+    notify-send "Network Manager" "WiFi list refreshed."
+    ;;
+
+  "📶  Toggle Wi-Fi")
+    state=$(nmcli radio wifi)
+    if [ "$state" = "enabled" ]; then
+      nmcli radio wifi off
+      notify-send "Network Manager" "WiFi disabled."
+    else
+      nmcli radio wifi on
+      notify-send "Network Manager" "WiFi enabled."
+    fi
+    ;;
+
+  "📡  Connect to Network")
+    wifi=$(get_wifi_list | $rofi_cmd | sed -e 's/.*  //' -e 's/ (Connected)//')
+    [ -z "$wifi" ] && exit
+    if nmcli dev wifi connect "$wifi"; then
+      notify-send "Network Manager" "Connected to $wifi"
+    else
+      pass=$(rofi -dmenu -p "Password for $wifi" -password)
+      nmcli dev wifi connect "$wifi" password "$pass" && notify-send "Network Manager" "Connected to $wifi"
+    fi
+    ;;
+
+  "🔌  Ethernet LAN")
+    eth_dev=$(get_ethernet_device)
+    if [ -z "$eth_dev" ]; then
+      notify-send "Network Manager" "No Ethernet device found."
+      exit
+    fi
+
+    eth_status=$(nmcli device status | grep "^$eth_dev" | awk '{print $3}')
+    if [ "$eth_status" = "connected" ]; then
+      nmcli device disconnect "$eth_dev"
+      notify-send "Network Manager" "Ethernet ($eth_dev) disconnected."
+    else
+      nmcli device connect "$eth_dev"
+      notify-send "Network Manager" "Ethernet ($eth_dev) connected."
+    fi
+    ;;
+
+  "❌  Disconnect")
+    nmcli con down id "$(nmcli -t -f NAME con show --active | head -n1)"
+    notify-send "Network Manager" "Disconnected"
+    ;;
+esac

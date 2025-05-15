@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Gunakan tema warna dari pywal
+ROFI_THEME="/home/inuma/.local/share/rofi/themes/material-you/material-you-network.rasi"
+
+# Pastikan nmcli tersedia
+if ! command -v nmcli &> /dev/null; then
+    notify-send "Network Manager" "nmcli tidak ditemukan di sistem."
+    exit 1
+fi
+
+# Ambil daftar koneksi
+connections=$(nmcli connection show | awk 'NR>1 {print $1}')
+
+# Tampilkan dalam rofi
+chosen=$(echo "$connections" | rofi -dmenu -theme "$ROFI_THEME" -p "Connect to:")
+
+# Jika user memilih koneksi
+if [ -n "$chosen" ]; then
+    nmcli connection up "$chosen" &> /dev/null && \
+        notify-send "Network Manager" "Tersambung ke $chosen" || \
+        notify-send "Network Manager" "Gagal tersambung ke $chosen"
+fi

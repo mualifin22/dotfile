@@ -1,0 +1,119 @@
+@import url("/home/inuma/.config/waybar/colors.css");
+
+* {
+  font-family: "DM Sans", "JetBrainsMono Nerd Font Propo", sans-serif;
+  font-size: 12px;
+  border-radius: 35px;
+  font-weight: bold;
+  padding: 0;
+}
+
+window#waybar {
+  background-color: transparent;
+  color: @foreground;
+}
+
+.modules-right {
+  margin-right: 8px;
+}
+
+#workspaces {
+  background-color: @surface_container_low;
+  padding: 2px 2px 2px 2px;
+  border-radius: 35px;
+  margin-left: 8px;
+}
+
+#workspaces button.active {
+  background-color: @primary_fixed_dim;
+  color: @on_primary_fixed;
+  padding: 0px 15px;
+}
+
+#workspaces button.active:hover {
+  color: @primary_fixed_dim;
+  background: inherit;
+}
+
+#workspaces button.empty {
+  color: @outline_variant;
+}
+
+#workspaces button {
+  background-color: transparent;
+  color: @outline;
+  transition: margin 150ms ease-in-out, padding 150ms ease-in-out;
+  transition: background-color 0.3s ease, color 0.3s ease, padding 0.2s ease;
+}
+
+#workspaces button:hover {
+  background: @surface_container_high;
+}
+
+#workspaces button.urgent {
+  background-color: @primary;
+  color: @on_error;
+}
+
+#battery,
+#pulseaudio,
+#backlight,
+#custom-pacman,
+#network,
+#clock,
+#custom-weather,
+#custom-media,
+#window,
+#cpu,
+#memory,
+#disk,
+#tray,
+#custom-notification,
+#power-profiles-daemon {
+  color: @primary;
+  background-color: @surface_container;
+  padding:  0px 11px 0px 11px;
+  margin: 0 0 0 8px;
+}
+
+
+#window.hidden {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+window#waybar.empty #window {
+    background-color: transparent;
+}
+
+#custom-power {
+  color: @on_error;
+  background-color: @primary;
+  padding: 0px 11px;
+  margin-left: 8px;
+  border-radius: 35px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#custom-power:hover {
+  background-color: @error_container;
+  color: @error;
+}
+
+#custom-launcher {
+   color: @primary;
+   background-color: @surface_container;
+   padding: 0px 10px;
+   margin-left: 8px;
+   border-radius: 35px;
+   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+ #custom-launcher:hover {
+   background-color: @primary;
+   color: @surface_container;
+ }
